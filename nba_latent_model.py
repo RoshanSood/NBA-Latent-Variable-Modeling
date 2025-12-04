@@ -17,13 +17,6 @@ if "SEASON" not in games.columns:
     season = np.where(month <= 8, season - 1, season)
     games["SEASON"] = season
 
-
-#track PointDifferential = home points - away points
-if "PTS_home" in games.columns and "PTS_away" in games.columns:
-    games["PointDifferential"] = games["PTS_home"] - games["PTS_away"]
-elif "HOME_TEAM_POINTS" in games.columns and "VISITOR_TEAM_POINTS" in games.columns:
-    games["PointDifferential"] = games["HOME_TEAM_POINTS"] - games["VISITOR_TEAM_POINTS"]
-
 #gather rest day data
 games["RestDaysHome"] = np.nan
 games["RestDaysAway"] = np.nan
@@ -74,7 +67,7 @@ team_id_to_idx = {tid: i for i, tid in enumerate(team_ids)}
 num_teams = len(team_ids)
 
 #feature matrix X with label y
-feature_cols = ["RestDaysHome", "RestDaysAway", "PointDifferential"]
+feature_cols = ["RestDaysHome", "RestDaysAway"]
 
 def make_split(mask, scaler=None, fit_scaler=False):
     df = games.loc[mask].copy()
@@ -201,7 +194,7 @@ def train_one_model(lr: float,
 
 #(mle) learning-rate search
 candidate_lrs = [0.001, 0.003, 0.01, 0.03, 0.1]
-num_epochs = 50
+num_epochs = 150
 
 print("Finding best learning rates with validation predictive log-likelihood")
 
